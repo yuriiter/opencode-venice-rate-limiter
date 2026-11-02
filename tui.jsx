@@ -1,37 +1,13 @@
 /** @jsxImportSource @opentui/solid */
-import { Show, createSignal } from "solid-js"
+import { Show, createMemo, createSignal } from "solid-js"
 import {
   CONFIG_PATH,
+  currentModel,
   formatCompact,
   loadSnapshot,
   readJson,
   resolveModelEntry,
 } from "./core.mjs"
-
-function currentModel(messages) {
-  for (let i = messages.length - 1; i >= 0; i--) {
-    const message = messages[i]
-    if (!message) continue
-
-    if (message.role === "assistant" && message.modelID) {
-      return {
-        id: message.modelID,
-        providerID: message.providerID,
-        api: { id: message.modelID },
-      }
-    }
-
-    if (message.role === "user" && message.model?.modelID) {
-      return {
-        id: message.model.modelID,
-        providerID: message.model.providerID,
-        api: { id: message.model.modelID },
-      }
-    }
-  }
-
-  return null
-}
 
 const tui = async (api) => {
   const [snapshot, setSnapshot] = createSignal(loadSnapshot())
@@ -50,13 +26,14 @@ const tui = async (api) => {
   api.slots.register({
     order: 100,
     slots: {
-      session_prompt_right(ctx) {
-        const visible = () => {
+      session_prompt_right(ctx, props) {
+        const messages = createMemo(() => api.state.session.messages(props.session_id))
+        const visible = createMemo(() => {
           snapshot()
-          const model = currentModel(api.state.session.messages(ctx.session_id))
+          const model = currentModel(messages())
           if (!model) return false
           return Boolean(resolveModelEntry(model, readJson(CONFIG_PATH, null)))
-        }
+        })
 
         return (
           <Show when={visible()}>

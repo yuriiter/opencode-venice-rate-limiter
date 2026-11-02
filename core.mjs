@@ -142,6 +142,33 @@ export function resolveModelEntry(model, config) {
   return null
 }
 
+export function currentModel(messages) {
+  if (!Array.isArray(messages)) return null
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const message = messages[i]
+    if (!message) continue
+
+    if (message.role === "assistant" && message.modelID) {
+      return {
+        id: message.modelID,
+        providerID: message.providerID,
+        api: { id: message.modelID },
+      }
+    }
+
+    if (message.role === "user" && message.model?.modelID) {
+      return {
+        id: message.model.modelID,
+        providerID: message.model.providerID,
+        api: { id: message.model.modelID },
+      }
+    }
+  }
+
+  return null
+}
+
 export function calculateCost(tokens, pricing, fallback) {
   const fallbackCost = Number(fallback) || 0
   if (!pricing || typeof pricing !== "object") return fallbackCost
