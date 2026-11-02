@@ -14,7 +14,7 @@
           "pricing": {
             "input": 0.33,
             "output": 1.32,
-            "cached": 0.0083
+            "cached": 0.00825
           }
         }
       }
