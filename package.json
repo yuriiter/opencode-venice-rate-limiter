@@ -1,0 +1,37 @@
+{
+  "name": "opencode-venice-rate-limiter",
+  "version": "1.0.0",
+  "description": "Provider-pooled sliding-window rate limiter for OpenCode with a TUI status indicator",
+  "type": "module",
+  "main": "./server.js",
+  "exports": {
+    ".": "./server.js",
+    "./server": "./server.js",
+    "./tui": "./tui.jsx"
+  },
+  "files": [
+    "server.js",
+    "tui.jsx",
+    "core.mjs",
+    "limits.mjs",
+    "config.json"
+  ],
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "rate-limit",
+    "venice",
+    "budget"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuriiter/opencode-venice-rate-limiter.git"
+  },
+  "homepage": "https://github.com/yuriiter/opencode-venice-rate-limiter",
+  "bugs": {
+    "url": "https://github.com/yuriiter/opencode-venice-rate-limiter/issues"
+  },
+  "engines": {
+    "opencode": ">=1.19.5"
+  }
+}
