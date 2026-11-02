@@ -345,14 +345,11 @@ export function formatCompact(snapshot) {
   const worst = all.reduce((a, b) => (b.window.percent > a.window.percent ? b : a))
   const primary = worst.pool
   const windows = primary.windows
-  const fiveHour = windows.find((window) => window.name === "5h") ?? windows[0]
   const monthly = windows.find((window) => window.name === "30d") ?? windows[windows.length - 1]
 
-  const parts = []
-  if (fiveHour) parts.push(`${fiveHour.name} ${fiveHour.percent.toFixed(0)}%`)
-  if (monthly && monthly !== fiveHour) parts.push(`${monthly.name} ${monthly.percent.toFixed(0)}%`)
+  const parts = windows.map((window) => `${window.name} ${window.percent.toFixed(0)}%`)
 
-  const spent = monthly ? monthly.spent : fiveHour ? fiveHour.spent : 0
+  const spent = monthly ? monthly.spent : windows[0]?.spent ?? 0
   return `${primary.name} ${parts.join(" · ")} ($${spent.toFixed(4)}/$${primary.budget.toFixed(2)})`
 }
 
